@@ -1,5 +1,5 @@
-import type { DynamicGlobalProperties } from './../src'
-import { Client } from './../src'
+import type { DynamicGlobalProperties } from '../src'
+import { Client } from '../src'
 
 vi.setConfig({
   testTimeout: 100000,
