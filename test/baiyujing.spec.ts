@@ -1,4 +1,3 @@
-import type { DynamicGlobalProperties } from '../src'
 import { Client } from '../src'
 
 vi.setConfig({
@@ -21,7 +20,26 @@ describe('node and chain information', () => {
   it('should get state', async () => {
     const state = await client.baiyujing.getState()
     expect(state).toHaveProperty('props')
-    expect((state as { props: DynamicGlobalProperties }).props).toHaveProperty('time')
+    expect(state.props).toHaveProperty('time')
+  })
+  it('should get state with simings path', async () => {
+    const state = await client.baiyujing.getState('simings')
+    expect(state).toHaveProperty('current_route', 'simings')
+    expect(state).toHaveProperty('simings', expect.objectContaining({
+      initminer: expect.any(Object),
+    }))
+  })
+
+  it('should get state with account path', async () => {
+    const state = await client.baiyujing.getState('@sifu/transfers')
+    expect(state).toHaveProperty('current_route', '@sifu/transfers')
+    expect(state).toHaveProperty('accounts', expect.objectContaining({
+      sifu: expect.objectContaining({
+        transfer_history: expect.arrayContaining([
+          expect.any(Object),
+        ]),
+      }),
+    }))
   })
 
   it('should get siming', async () => {
@@ -165,7 +183,7 @@ describe('account information', () => {
   // TODO(@enpitsulin): 记录下报错
   it.skip('should get expiring qi delegations', async () => {
     try {
-      const delegations = await client.baiyujing.getExpiringQiDelegations('sifu', 0, 10)
+      const delegations = await client.baiyujing.getExpiringQiDelegations('ctaiyi-kxdbofbdnctaiyi-kxdbofbdn', 0, 10)
       expect(delegations).toMatchInlineSnapshot(`[]`)
     }
     catch (e) {
