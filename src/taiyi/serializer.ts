@@ -1,5 +1,5 @@
 import type { Operation } from './operation'
-import * as ByteBuffer from 'bytebuffer'
+import ByteBuffer from 'bytebuffer'
 import { PublicKey } from '../crypto'
 import { Asset } from './asset'
 import { HexBuffer } from './misc'
