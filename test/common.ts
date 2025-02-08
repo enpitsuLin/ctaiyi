@@ -18,10 +18,11 @@ export function randomString(length: number) {
 
 export async function createAccount(): Promise<{ username: string, password: string }> {
   const client = Client.testnet()
-  const public_key = INITMINER_PRIVATE_KEY.createPublic('TAI')
 
   const password = randomString(32)
   const username = `ctaiyi-${randomString(9)}`
+  const privateKey = PrivateKey.fromLogin(username, password)
+  const public_key = privateKey.createPublic('TAI')
 
   const confirmation = await client.broadcast.sendOperations([
     [
