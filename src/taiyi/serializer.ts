@@ -189,11 +189,65 @@ const PriceSerializer = ObjectSerializer([
   ['quote', AssetSerializer],
 ])
 
-const ChainPropertiesSerializer = ObjectSerializer([
+const SimingUpdatePropertiesSerializer = ObjectSerializer([
   ['account_creation_fee', AssetSerializer],
   ['maximum_block_size', UInt32Serializer],
-  ['sbd_interest_rate', UInt16Serializer],
 ])
+
+function SimingSetPropertiesSerializer(
+  buffer: ByteBuffer,
+  data: [
+    ['key', string],
+    ['new_signing_key', string | PublicKey],
+    ['account_creation_fee', Asset | string | number],
+    ['maximum_block_size', number],
+    ['url', string],
+  ],
+) {
+  function tempSerialize(serializer: Serializer, data: any) {
+    const buffer = new ByteBuffer(ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN)
+    serializer(buffer, data)
+    buffer.flip()
+    return new Uint8Array(buffer.toArrayBuffer())
+  }
+
+  buffer.writeVarint32(data.length)
+  data.forEach(([key, value], index) => {
+    switch (key) {
+      case 'key':
+      case 'new_signing_key': {
+        const v = tempSerialize(PublicKeySerializer, value)
+        // @ts-expect-error have to do this
+        data[index][1] = v
+        VariableBinarySerializer(buffer, v)
+        break
+      }
+      case 'maximum_block_size': {
+        const v = tempSerialize(UInt32Serializer, value)
+        // @ts-expect-error have to do this
+        data[index][1] = v
+        VariableBinarySerializer(buffer, v)
+        break
+      }
+      case 'url': {
+        const v = tempSerialize(StringSerializer, value)
+        // @ts-expect-error have to do this
+        data[index][1] = v
+        VariableBinarySerializer(buffer, v)
+        break
+      }
+      case 'account_creation_fee': {
+        const v = tempSerialize(AssetSerializer, value)
+        // @ts-expect-error have to do this
+        data[index][1] = v
+        VariableBinarySerializer(buffer, v)
+        break
+      }
+    }
+  })
+
+  data.sort((a, b) => a[0].localeCompare(b[0]))
+}
 
 function OperationDataSerializer<
   const Definitions extends Array<[string, Serializer<any>]>,
@@ -237,9 +291,8 @@ const OperationSerializers = {
     ['amount', AssetSerializer],
   ]),
   withdraw_qi: OperationDataSerializer(4, [
-    ['from', StringSerializer],
-    ['to', StringSerializer],
-    ['amount', AssetSerializer],
+    ['account', StringSerializer],
+    ['qi', AssetSerializer],
   ]),
   set_withdraw_qi_route: OperationDataSerializer(5, [
     ['from_account', StringSerializer],
@@ -257,16 +310,16 @@ const OperationSerializers = {
     ['owner', StringSerializer],
     ['url', StringSerializer],
     ['block_signing_key', PublicKeySerializer],
-    ['props', ChainPropertiesSerializer],
+    ['props', SimingUpdatePropertiesSerializer],
     ['fee', AssetSerializer],
   ]),
   siming_set_properties: OperationDataSerializer(8, [
     ['owner', StringSerializer],
-    ['props', ChainPropertiesSerializer],
+    ['props', SimingSetPropertiesSerializer],
     ['extensions', ArraySerializer(VoidSerializer)],
   ]),
   account_siming_adore: OperationDataSerializer(9, [
-    ['amount', StringSerializer],
+    ['account', StringSerializer],
     ['siming', StringSerializer],
     ['approve', BooleanSerializer],
   ]),
