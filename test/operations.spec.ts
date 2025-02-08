@@ -6,7 +6,7 @@ import { Asset, Client, HexBuffer, PrivateKey } from './../src'
 import { getTestnetAccounts, randomString } from './common'
 
 // 需要本地节点来处理
-describe.skip('operations', () => {
+describe('operations', () => {
   vi.setConfig({
     testTimeout: 10 * 60 * 1000,
     hookTimeout: 10 * 60 * 1000,
@@ -36,7 +36,7 @@ describe.skip('operations', () => {
         delegatee: acc2.username,
         qi: newDelegation,
       },
-      acc1Key
+      acc1Key,
     )
     const [user2] = await client.baiyujing.getAccounts([acc2.username])
     assert.equal(user2.received_qi, newDelegation.toString())
@@ -44,11 +44,12 @@ describe.skip('operations', () => {
 
   it('should send custom', async () => {
     const op: CustomOperation = [
-      'custom', {
+      'custom',
+      {
         required_auths: [acc1.username],
         id: ~~(Math.random() * 65535),
         data: new Uint8Array(randomBytes(512).buffer),
-      }
+      },
     ]
     const rv = await client.broadcast.sendOperations([op], acc1Key)
     const tx = await client.baiyujing.getTransaction(rv.id)

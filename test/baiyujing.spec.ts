@@ -1,11 +1,11 @@
 import type { SignedTransaction, Transaction } from '../src'
-import { Client, PrivateKey } from '../src'
+import { Client } from '../src'
+import { INITMINER_PRIVATE_KEY } from './common'
 
 vi.setConfig({
   testTimeout: 100000,
 })
 const client = Client.testnet({ autoConnect: false })
-const initminger_private_key = PrivateKey.fromString('5JNHfZYKGaomSFvd4NUdQ9qMcEAC43kujbfjueTHpVapX1Kzq2n')
 
 describe('client instance base status', () => {
   it('should connect', async () => {
@@ -38,12 +38,12 @@ end`
               owner: 'initminer',
               name: 'contract.nfa.base',
               data,
-              contract_authority: initminger_private_key.createPublic('TAI').toString(),
+              contract_authority: INITMINER_PRIVATE_KEY.createPublic('TAI').toString(),
               extensions: [],
             },
           ],
         ],
-        initminger_private_key,
+        INITMINER_PRIVATE_KEY,
       )
     }
 
@@ -62,7 +62,7 @@ end`
             },
           ],
         ],
-        initminger_private_key,
+        INITMINER_PRIVATE_KEY,
       )
 
       await client.broadcast.sendOperations(
@@ -75,7 +75,7 @@ end`
             },
           ],
         ],
-        initminger_private_key,
+        INITMINER_PRIVATE_KEY,
       )
     }
   })
@@ -369,7 +369,7 @@ describe('transaction', () => {
       ],
     })
 
-    signedTrx = client.broadcast.sign(trx, initminger_private_key)
+    signedTrx = client.broadcast.sign(trx, INITMINER_PRIVATE_KEY)
     const confirmation = await client.broadcast.send(signedTrx)
     transactionId = confirmation.id
   })
@@ -404,7 +404,7 @@ describe('transaction', () => {
   it('should get potential signatures', async () => {
     expect(signedTrx, 'this test case should run after the previous test case').not.toBeNull()
     const signatures = await client.baiyujing.getPotentialSignatures(signedTrx!)
-    expect(signatures).toEqual([initminger_private_key.createPublic().toString()])
+    expect(signatures).toEqual([INITMINER_PRIVATE_KEY.createPublic().toString()])
   })
 
   it('should verify authority', async () => {
@@ -414,12 +414,11 @@ describe('transaction', () => {
   })
 
   it('should verify account authority', async () => {
-    const authority = await client.baiyujing.verifyAccountAuthority('temp', [initminger_private_key.createPublic().toString()])
+    const authority = await client.baiyujing.verifyAccountAuthority('temp', [INITMINER_PRIVATE_KEY.createPublic().toString()])
     expect(authority).toBe(true)
   })
 })
 
-// 本地部署 nfa 有点问题先跳过
 describe('nfa', () => {
   it('should get nfa', async () => {
     const nfa = await client.baiyujing.findNfa(0)
