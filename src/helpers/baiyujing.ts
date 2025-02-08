@@ -182,8 +182,8 @@ export class BaiYuJingAPI {
     return this.call<boolean>('verify_authority', [trx])
   }
 
-  async verifyAccountAuthority(accountName: string, signers: string[]) {
-    return this.call<boolean>('verify_account_authority', [accountName, signers])
+  async verifyAccountAuthority(accountName: string, keys: string[]) {
+    return this.call<boolean>('verify_account_authority', [accountName, keys])
   }
 
   // #endregion

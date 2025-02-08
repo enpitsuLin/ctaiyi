@@ -1,6 +1,8 @@
+import type { AuthorityType } from './account'
 import type { Operation } from './operation'
 import ByteBuffer from 'bytebuffer'
 import { PublicKey } from '../crypto'
+import { Authority } from './account'
 import { Asset } from './asset'
 import { HexBuffer } from './misc'
 
@@ -172,11 +174,15 @@ function OptionalSerializer(valueSerializer: Serializer) {
   }
 }
 
-const AuthoritySerializer = ObjectSerializer([
-  ['weight_threshold', UInt32Serializer],
-  ['account_auths', FlatMapSerializer(StringSerializer, UInt16Serializer)],
-  ['key_auths', FlatMapSerializer(PublicKeySerializer, UInt16Serializer)],
-])
+function AuthoritySerializer(buffer: ByteBuffer, data: Authority | string | AuthorityType) {
+  const serializer = ObjectSerializer([
+    ['weight_threshold', UInt32Serializer],
+    ['account_auths', FlatMapSerializer(StringSerializer, UInt16Serializer)],
+    ['key_auths', FlatMapSerializer(PublicKeySerializer, UInt16Serializer)],
+  ])
+
+  serializer(buffer, Authority.from(data))
+}
 
 const PriceSerializer = ObjectSerializer([
   ['base', AssetSerializer],
@@ -313,9 +319,9 @@ const OperationSerializers = {
   create_contract: OperationDataSerializer(18, [
     ['owner', StringSerializer],
     ['name', StringSerializer],
-    ['code', StringSerializer],
-    ['abi', StringSerializer],
-    ['fee', AssetSerializer],
+    ['data', StringSerializer],
+    ['contract_authority', PublicKeySerializer],
+    ['extensions', ArraySerializer(VoidSerializer)],
   ]),
   revise_contract: OperationDataSerializer(19, [
     ['owner', StringSerializer],
@@ -335,18 +341,15 @@ const OperationSerializers = {
 
   // #region nfa (non fungible asset)
   create_nfa_symbol: OperationDataSerializer(21, [
-    ['owner', StringSerializer],
-    ['name', StringSerializer],
-    ['maximum_supply', UInt32Serializer],
-    ['json_metadata', StringSerializer],
+    ['creator', StringSerializer],
+    ['symbol', StringSerializer],
+    ['describe', StringSerializer],
+    ['default_contract', StringSerializer],
   ]),
 
   create_nfa: OperationDataSerializer(22, [
     ['creator', StringSerializer],
     ['symbol', StringSerializer],
-    ['to', StringSerializer],
-    ['uri', StringSerializer],
-    ['json_metadata', StringSerializer],
   ]),
 
   transfer_nfa: OperationDataSerializer(23, [

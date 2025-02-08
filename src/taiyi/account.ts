@@ -30,12 +30,12 @@ export class Authority implements AuthorityType {
 
   public weight_threshold: number
   public account_auths: Array<[string, number]>
-  public key_auths: Array<[string | PublicKey, number]>
+  public key_auths: Array<[string, number]>
 
   constructor({ weight_threshold, account_auths, key_auths }: AuthorityType) {
     this.weight_threshold = weight_threshold
     this.account_auths = account_auths
-    this.key_auths = key_auths
+    this.key_auths = key_auths.map(([key, weight]) => [key.toString(), weight])
   }
 }
 

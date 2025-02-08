@@ -267,9 +267,9 @@ export interface CreateContractOperation extends Operation {
   1: {
     owner: string
     name: string
-    code: string
-    abi: string
-    fee: Asset | string
+    data: string
+    contract_authority: AuthorityType
+    extensions: unknown[]
   }
 }
 
