@@ -158,7 +158,7 @@ export class BaiYuJingAPI {
 
   // #region Transaction
 
-  async getTransactionHex(tx: SignedTransaction) {
+  async getTransactionHex(tx: SignedTransaction | Transaction) {
     return this.call<string>('get_transaction_hex', [tx])
   }
 
