@@ -288,9 +288,9 @@ describe('operations', () => {
       'claim_reward_balance',
       {
         account: 'initminer',
-        // TODO(@enpitsulin): `reward_qi` maybe wrong symbol, need node to fix
+        // NOTE: if account reward is 0, the asset symbol will be treat as YANG
         reward_qi: '0.000 YANG',
-        reward_yang: '0.000000 QI',
+        reward_yang: '0.000 YANG',
         reward_feigang: '0.000000 QI',
       },
     ], client)
