@@ -1,5 +1,5 @@
 import type { ClientMessageError } from '../src/errors'
-import { RPCError } from '../src/errors'
+import { ClientWebSocketError, RPCError } from '../src/errors'
 import { WebSocketTransport } from '../src/transport'
 import { Client } from './../src'
 import { waitForEvent } from './../src/utils'
@@ -32,7 +32,7 @@ describe('client', () => {
       assert(error instanceof Error)
 
       expect(error.name).toBe(client.transport instanceof WebSocketTransport ? 'WebSocketError' : 'HTTPError')
-      expect(error.message).toBe(`HTTP request failed`)
+      expect(error.message).toBe(client.transport instanceof WebSocketTransport ? 'WebSocket request error' : 'HTTP request failed')
 
       assert(error.cause instanceof RPCError)
       expect(error.cause.message).toBe(`method_itr != api_itr->second.end(): Could not find method method_does_exist`)
@@ -79,7 +79,9 @@ describe('client', () => {
           assert(false, 'should not be reached')
         }
         catch (error) {
-          expect((error as Error).message).toBe('Send fail')
+          assert(error instanceof ClientWebSocketError)
+          assert(error.cause instanceof Error)
+          expect(error.cause.message).toBe('Send fail')
         }
         // @ts-expect-error test usage
         client.transport.socket!.send = socketSend
@@ -93,7 +95,9 @@ describe('client', () => {
           assert(false, 'should not be reached')
         }
         catch (error) {
-          assert.equal((error as Error).name, 'TimeoutError')
+          assert(error instanceof ClientWebSocketError)
+          assert(error.cause instanceof Error)
+          expect(error.cause.name).toBe('TimeoutError')
         }
         client.sendTimeout = 5000
         await client.connect()

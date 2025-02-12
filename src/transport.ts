@@ -160,7 +160,7 @@ export class WebSocketTransport extends EventTarget {
       }
       this.client.pending.delete(seq)
       if (error) {
-        reject(error)
+        reject(new ClientWebSocketError('WebSocket request error', { cause: error }))
       }
       else {
         resolve(response)
@@ -227,7 +227,7 @@ export class WebSocketTransport extends EventTarget {
         const response = rpcMessage as RPCResponse
         let error: Error | undefined
         if (response.error) {
-          throw normalizeRpcError(response.error)
+          error = normalizeRpcError(response.error)
         }
         this.rpcHandler(response.id, error, response.result)
       }
