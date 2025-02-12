@@ -90,6 +90,7 @@ describe('client', () => {
       it('should time out when loosing connection', async () => {
         client.sendTimeout = 100
         await client.disconnect()
+        assert(!client.isConnected())
         try {
           await client.call('baiyujing_api', 'get_accounts', [['initminer']]) as any[]
           assert(false, 'should not be reached')
@@ -101,11 +102,6 @@ describe('client', () => {
         }
         client.sendTimeout = 5000
         await client.connect()
-      })
-
-      it('should disconnect', async () => {
-        await client.disconnect()
-        assert(!client.isConnected())
       })
     },
   )
