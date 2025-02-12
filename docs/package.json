@@ -1,0 +1,23 @@
+{
+  "name": "docs",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "author": "",
+  "license": "MIT",
+  "keywords": [],
+  "main": "index.js",
+  "scripts": {
+    "dev": "vitepress --port 3333 --open",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "@shikijs/vitepress-twoslash": "^2.3.2",
+    "@taiyinet/ctaiyi": "workspace:*",
+    "vite": "^6.1.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitepress": "^1.6.3"
+  }
+}

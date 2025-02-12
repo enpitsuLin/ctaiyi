@@ -41,6 +41,9 @@
     "prepack": "unbuild",
     "test": "vitest",
     "lint": "eslint .",
+    "docs:dev": "pnpm -C docs dev",
+    "docs:build": "pnpm -C docs build",
+    "docs:preview": "pnpm -C docs preview",
     "lint:fix": "eslint --fix .",
     "prepare": "simple-git-hooks",
     "prepublishOnly": "pnpm build"
@@ -63,7 +66,6 @@
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.7.3",
     "unbuild": "^3.3.1",
-    "vite": "^6.1.0",
     "vitest": "^3.0.5"
   },
   "simple-git-hooks": {
