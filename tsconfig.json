@@ -1,36 +1,35 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "lib": ["esnext", "DOM"],
-    "rootDir": ".",
+    "target": "es2018",
+    "jsx": "preserve",
+    "lib": [
+      "esnext",
+      "DOM"
+    ],
     "module": "esnext",
     "moduleResolution": "Bundler",
     "paths": {
-      "@taiyinet/ctaiyi": ["./src/index.ts"]
+      "@taiyinet/ctaiyi": [
+        "./packages/ctaiyi/src"
+      ]
     },
     "resolveJsonModule": true,
-    "allowJs": true,
+    "types": [
+      "node",
+      "vite/client",
+      "vitest/importMeta",
+      "vitest/globals"
+    ],
     "strict": true,
     "strictNullChecks": true,
-    "noEmit": true,
-    "preserveValueImports": false,
     "esModuleInterop": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
-  "references": [
-    {
-      "path": "./tsconfig.spec.json"
-    }
-  ],
-  "include": [
-    "src/**/*.ts",
-    "docs/.vitepress/**/*.ts",
-    "docs/.vitepress/**/*.vue",
-    "eslint.config.js"
-  ],
   "exclude": [
+    "**/dist/**",
     "**/node_modules/**",
-    "**/dist/**"
+    "**/playground/**",
+    "**/examples/**"
   ]
 }

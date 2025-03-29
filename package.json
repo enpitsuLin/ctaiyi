@@ -1,72 +1,28 @@
 {
-  "name": "@taiyinet/ctaiyi",
+  "name": "@taiyinet/ctaiyi-monorepo",
   "type": "module",
   "version": "1.0.0",
+  "private": true,
   "packageManager": "pnpm@10.7.0",
-  "description": "Taiyi blockchain RPC client library",
-  "author": "hongzhong🀄️",
-  "contributors": [
-    {
-      "name": "enpitsulin",
-      "email": "enpitsulin@gmail.com"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hongzhongx/ctaiyi"
-  },
-  "keywords": [
-    "blockchain",
-    "client",
-    "rpc",
-    "taiyi",
-    "zuowangdao"
-  ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "main": "./dist/index.cjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "engines": {
     "node": ">=22.13.1"
   },
   "scripts": {
-    "build": "unbuild",
-    "prepack": "unbuild",
+    "build": "rimraf packages/*/dist --glob && pnpm -r --filter=./packages/* run build",
+    "lint": "eslint --cache .",
+    "lint:fix": "pnpm lint --fix",
     "test": "vitest",
-    "lint": "eslint .",
-    "docs:dev": "pnpm -C docs dev",
-    "docs:build": "pnpm -C docs build",
-    "docs:preview": "pnpm -C docs preview",
-    "playground:dev": "pnpm -C playground dev",
-    "playground:build": "pnpm -C playground build",
-    "lint:fix": "eslint --fix .",
-    "prepare": "simple-git-hooks",
-    "prepublishOnly": "pnpm build"
-  },
-  "dependencies": {
-    "@noble/hashes": "^1.7.1",
-    "@noble/secp256k1": "^2.2.3",
-    "bs58": "^6.0.0",
-    "bytebuffer": "^5.0.1",
-    "defu": "^6.1.4",
-    "tiny-invariant": "^1.3.3"
+    "test:update": "vitest -u"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.11.0",
-    "@types/bytebuffer": "^5.0.49",
     "@types/node": "^22.13.14",
     "eslint": "^9.23.0",
     "lint-staged": "^15.5.0",
+    "rimraf": "^6.0.1",
     "simple-git-hooks": "^2.12.1",
     "typescript": "^5.8.2",
-    "unbuild": "^3.5.0",
+    "vite": "^6.2.3",
     "vitest": "^3.0.9"
   },
   "simple-git-hooks": {

@@ -59,7 +59,7 @@ export class Blockchain {
    * 返回一个异步块高迭代器。
    * @param options 迭代器选项，也可以是一个区块编号。
    */
-  public async *getBlockNumbers(options?: BlockchainStreamOptions | number) {
+  public async* getBlockNumbers(options?: BlockchainStreamOptions | number) {
     // const config = await this.client.database.getConfig()
     // const interval = config['TAIYI_BLOCK_INTERVAL'] as number
     const interval = 3
@@ -96,7 +96,7 @@ export class Blockchain {
   /**
    * 返回一个异步块迭代器，接受与 {@link getBlockNumbers} 相同的参数。
    */
-  public async *getBlocks(options?: BlockchainStreamOptions | number) {
+  public async* getBlocks(options?: BlockchainStreamOptions | number) {
     for await (const num of this.getBlockNumbers(options)) {
       yield await this.client.baiyujing.getBlock(num)
     }
@@ -112,7 +112,7 @@ export class Blockchain {
   /**
    * 返回一个异步 Operation 迭代器，接受与 {@link getBlockNumbers} 相同的参数。
    */
-  public async *getOperations(options?: BlockchainStreamOptions | number) {
+  public async* getOperations(options?: BlockchainStreamOptions | number) {
     for await (const num of this.getBlockNumbers(options)) {
       const operations = await this.client.baiyujing.getOperations(num)
       for (const operation of operations) {
